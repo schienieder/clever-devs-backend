@@ -5,6 +5,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
+
 import time
 
 app = FastAPI()
@@ -29,7 +32,7 @@ async def dummy():
 async def getJobPostings():
     # STORE ONLINEJOBSPH IN A VARIABLE
     JOB_POSTING_URL = 'https://www.onlinejobs.ph/jobseekers/jobsearch'
-    driver = webdriver.Chrome()
+    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
     # THEN OPEN IN IT IN YOUR CHROME WEB BROWSER
     driver.get(JOB_POSTING_URL)
 
