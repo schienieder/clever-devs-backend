@@ -12,9 +12,7 @@ import time
 
 app = FastAPI()
 
-origins = [
-    "*"
-]
+origins = ["https://cleverdevs.vercel.app/"]
 
 app.add_middleware(
     CORSMiddleware,
