@@ -5,32 +5,46 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service as ChromiumService
+from webdriver_manager.core.os_manager import ChromeType
 
 import time
 
 app = FastAPI()
 
-origins = ["https://cleverdevs.vercel.app/"]
+origins = [
+    "http://localhost:3000",
+    "https://cleverdevs.vercel.app"
+]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"],
+    allow_headers=["*"],    
 )
 
-@app.get('/api/dummy')
-async def dummy():
-    return { 'message': 'Justine Gwapo' }
+# Function to initialize the driver
+def get_driver():
+    options = webdriver.ChromeOptions()
+    options.add_argument("--headless")  # If you need headless mode
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+
+    # Use ChromeDriverManager to automatically fetch the right version of chromedriver
+    driver = webdriver.Chrome(
+        service=ChromiumService(ChromeDriverManager().install()),
+        options=options
+    )
+    return driver
 
 @app.get('/api/getJobPostings')
 async def getJobPostings():
     # STORE ONLINEJOBSPH IN A VARIABLE
     JOB_POSTING_URL = 'https://www.onlinejobs.ph/jobseekers/jobsearch'
-    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
+    driver = get_driver()
     # THEN OPEN IN IT IN YOUR CHROME WEB BROWSER
     driver.get(JOB_POSTING_URL)
 
